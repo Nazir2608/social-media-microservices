@@ -1,6 +1,7 @@
 package com.socialmedia.user.dto;
 
-import java.time.Instant;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,10 +9,10 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserProfileResponse {
-    private Long id;
-    private String username;
-    private String email;
+public class UpdateBioRequest {
+
+    @NotBlank
+    @Size(max = 2000)
     private String bio;
-    private Instant createdAt;
 }
+
