@@ -26,18 +26,3 @@ logging:
   level:
     root: INFO
     com.socialmedia: DEBUG
-
----
-
-spring:
-  config:
-    activate:
-      on-profile: docker
-  datasource:
-    url: jdbc:mysql://mysql:3306/social_media?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
-    username: root
-    password: MySql@123
-  data:
-    redis:
-      host: redis
-      port: 6379

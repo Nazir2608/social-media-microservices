@@ -24,4 +24,7 @@ public class RegisterUserRequest {
     @NotBlank
     @Size(min = 6, max = 255)
     private String password;
+
+    @Size(max = 2000)
+    private String bio;
 }
