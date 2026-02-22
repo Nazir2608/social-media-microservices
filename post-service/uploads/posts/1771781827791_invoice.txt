@@ -1,0 +1,43 @@
+--------------------------------------------
+                ACME Corporation
+            123 Business Street
+           New York, NY 10001, USA
+        Email: billing@acmecorp.com
+        Phone: +1 (555) 123-4567
+--------------------------------------------
+
+INVOICE
+
+Invoice #: INV-2024-002
+Invoice Date: 2024-05-20
+Due Date: 2024-06-05
+
+Bill To:
+Tech Solutions Pvt Ltd
+456 Innovation Park
+Bangalore, Karnataka 560001
+India
+
+--------------------------------------------
+Description                 Qty   Unit Price     Total
+--------------------------------------------
+Business Consulting         10    $100.00        $1,000.00
+System Architecture Review  2     $250.00        $500.00
+--------------------------------------------
+
+Subtotal:                                   $1,500.00
+Tax (0%):                                   $0.00
+Total Amount Due:                           $1,500.00
+
+Payment Terms:
+Payment due within 15 days.
+Bank Transfer Preferred.
+
+Bank Details:
+Bank Name: Global Bank
+Account Name: ACME Corporation
+Account Number: 123456789
+SWIFT: GB123ABC
+
+Thank you for your business!
+--------------------------------------------
