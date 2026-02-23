@@ -31,10 +31,7 @@ public class GraphController {
     private final GraphService graphService;
 
     @PostMapping("/follow/{userId}")
-    public ResponseEntity<ApiResponse<Void>> follow(
-            @RequestHeader("X-User-Id") @NotNull Long currentUserId,
-            @PathVariable @Min(1) Long userId) {
-
+    public ResponseEntity<ApiResponse<Void>> follow(@RequestHeader("X-User-Id") @NotNull Long currentUserId, @PathVariable @Min(1) Long userId) {
         log.info("Follow request from {} to {}", currentUserId, userId);
         graphService.follow(currentUserId, userId);
         ApiResponse<Void> response = ApiResponse.<Void>builder()
@@ -47,10 +44,7 @@ public class GraphController {
     }
 
     @DeleteMapping("/unfollow/{userId}")
-    public ResponseEntity<ApiResponse<Void>> unfollow(
-            @RequestHeader("X-User-Id") @NotNull Long currentUserId,
-            @PathVariable @Min(1) Long userId) {
-
+    public ResponseEntity<ApiResponse<Void>> unfollow(@RequestHeader("X-User-Id") @NotNull Long currentUserId, @PathVariable @Min(1) Long userId) {
         log.info("Unfollow request from {} to {}", currentUserId, userId);
         graphService.unfollow(currentUserId, userId);
         ApiResponse<Void> response = ApiResponse.<Void>builder()
@@ -63,11 +57,7 @@ public class GraphController {
     }
 
     @GetMapping("/{userId}/followers")
-    public ResponseEntity<ApiResponse<PagedResponse<UserResponse>>> followers(
-            @PathVariable @Min(1) Long userId,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "20") int size) {
-
+    public ResponseEntity<ApiResponse<PagedResponse<UserResponse>>> followers(@PathVariable @Min(1) Long userId, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "20") int size) {
         log.info("Fetching followers for userId={} page={} size={}", userId, page, size);
         PagedResponse<UserResponse> paged = graphService.getFollowers(userId, page, size);
         ApiResponse<PagedResponse<UserResponse>> response = ApiResponse.<PagedResponse<UserResponse>>builder()
@@ -80,11 +70,7 @@ public class GraphController {
     }
 
     @GetMapping("/{userId}/following")
-    public ResponseEntity<ApiResponse<PagedResponse<UserResponse>>> following(
-            @PathVariable @Min(1) Long userId,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "20") int size) {
-
+    public ResponseEntity<ApiResponse<PagedResponse<UserResponse>>> following(@PathVariable @Min(1) Long userId, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "20") int size) {
         log.info("Fetching following for userId={} page={} size={}", userId, page, size);
         PagedResponse<UserResponse> paged = graphService.getFollowing(userId, page, size);
         ApiResponse<PagedResponse<UserResponse>> response = ApiResponse.<PagedResponse<UserResponse>>builder()

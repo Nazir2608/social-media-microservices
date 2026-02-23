@@ -15,9 +15,8 @@ import org.springframework.context.annotation.Configuration;
                         + "and emit post_created events to Kafka."
         ),
         servers = {
-                @Server(url = "http://localhost:8081", description = "Local Post Service")
+                @Server(url = "http://localhost:8082", description = "Local Post Service")
         }
 )
 public class OpenApiConfig {
 }
-

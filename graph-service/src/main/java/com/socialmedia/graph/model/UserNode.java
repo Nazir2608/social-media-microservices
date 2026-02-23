@@ -17,8 +17,6 @@ public class UserNode {
 
     @Id
     private Long userId;
-
     private String username;
-
     private OffsetDateTime createdAt;
 }

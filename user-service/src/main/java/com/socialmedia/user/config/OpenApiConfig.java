@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
 @OpenAPIDefinition(info = @Info(title = "Social Media User Service", version = "0.0.1-SNAPSHOT",
                 description = "User management APIs for the Social Media application. "
                         + "Provides endpoints for registration, login, profile retrieval, and profile updates such as bio."),
-        servers = {@Server(url = "http://localhost:8080", description = "Local User Service")})
+        servers = {@Server(url = "http://localhost:8081", description = "Local User Service")})
 @SecurityScheme(name = "bearerAuth", type = SecuritySchemeType.HTTP, scheme = "bearer",bearerFormat = "JWT")
 public class OpenApiConfig {
 }

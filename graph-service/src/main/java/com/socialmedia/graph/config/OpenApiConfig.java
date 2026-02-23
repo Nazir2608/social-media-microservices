@@ -14,16 +14,8 @@ import org.springframework.context.annotation.Configuration;
                 version = "0.0.1-SNAPSHOT",
                 description = "Graph service managing user follow relationships using Neo4j."
         ),
-        servers = {
-                @Server(url = "http://localhost:8082", description = "Local Graph Service")
-        }
+        servers = {@Server(url = "http://localhost:8083", description = "Local Graph Service")}
 )
-@SecurityScheme(
-        name = "bearerAuth",
-        type = SecuritySchemeType.HTTP,
-        scheme = "bearer",
-        bearerFormat = "JWT"
-)
+@SecurityScheme(name = "bearerAuth", type = SecuritySchemeType.HTTP, scheme = "bearer", bearerFormat = "JWT")
 public class OpenApiConfig {
 }
-
