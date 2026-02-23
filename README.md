@@ -212,6 +212,48 @@ The architecture follows:
                                      +-----------------+
 ```
 
+### Create Post → User Feed Flow
+
+```text
+Client
+  |
+  | 1. POST /api/posts  (multipart: media + caption + hashtags)
+  v
+API Gateway
+  - Validates JWT
+  - Adds X-User-Id
+  |
+  v
+Post Service
+  - Save media to S3
+  - Save metadata (caption, tags, mediaUrl, userId) to DB
+  - Publish PostCreatedEvent
+  |
+  v
+Kafka  (topic: post_created)
+  |
+  | 2. Event consumed
+  v
+Feed Service
+  - Call Graph Service to get followers of author
+  - For each follower + author:
+        add postId to Redis sorted set feed:{userId}
+        score = createdAt timestamp
+  |
+  | 3. Client requests feed
+  v
+API Gateway
+  - Validates JWT
+  - Adds X-User-Id
+  |
+  v
+Feed Service
+  - Read top N postIds from Redis feed:{X-User-Id}
+  - Fetch post details from Post Service
+  - Fetch usernames from User Service
+  - Return ordered feed to client
+```
+
 ---
 
 ## Data Flow & Architecture Overview
