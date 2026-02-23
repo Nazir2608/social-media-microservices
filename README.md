@@ -138,6 +138,80 @@ The architecture follows:
   - Provides health, info and basic metrics endpoints under `/actuator/**`.
   - Can be scraped by external monitoring tools (Prometheus, Grafana, etc.) if needed.
 
+- **Prometheus**
+   - Metrics endpoint exposed via Actuator at `/actuator/prometheus` for each service.
+   - Prometheus can scrape `http://<service-host>:<port>/actuator/prometheus`.
+   - This enables central dashboards and alerting for request rate, latency and errors.
+
+---
+
+## Project Flow Diagram
+
+```text
+                          +-----------------------+
+                          |    Client (App/Web)   |
+                          +-----------+-----------+
+                                      |
+                           Multipart File (media +
+                           caption + hashtags)
+                                      |
+                                      v
+                 +--------------------+--------------------+
+                 |    CDN / Edge (optional in prod)        |
+                 +--------------------+--------------------+
+                                      |
+                                      v
+                 +--------------------+--------------------+
+                 |      API Gateway (Spring Cloud)         |
+                 |      - Auth / JWT                       |
+                 |      - Route to microservices           |
+                 +--------------------+--------------------+
+                                      |
+                                      v
+                          +----------+----------+
+                          |   Post Service      |
+                          |   - Store media     |
+                          |   - Extract         |
+                          |     metadata        |
+                          +----------+----------+
+                                     / \
+                        media (file) /   \  metadata (userId,
+                                     v     \ caption, tags,
+                              +------+--+   \ mediaUrl...)
+                              |  S3 /  |     v
+                              |Storage |  +--+----------------+
+                              +--------+  |  Postgres / MySQL |
+                                          +-------------------+
+                                                   |
+                                                   | PostCreatedEvent
+                                                   v
+                                         +---------+---------+
+                                         |      Kafka        |
+                                         |  topic: post_...  |
+                                         +----+---------+----+
+                                              |         |
+                                              |         |
+                       build user feeds       |         | index posts
+                                              |         |
+                       +------------------+   |   +-----+----------------+
+                       |   Feed Service   |   |   |   Search Service     |
+                       | - Read followers |   |   | - Build search index |
+                       | - Fanout to      |   |   +----------+-----------+
+                       |   user feeds     |   |              |
+                       +---------+--------+   |              |
+                                 |            |              v
+                                 v            |       +------+------+
+                         +-------+------+     |       |Elasticsearch|
+                         |   Redis      |     |       +-------------+
+                         | (USER FEED)  |     |
+                         +--------------+     |
+                                             v
+                                     +-------+---------+
+                                     |   Neo4j         |
+                                     | (Follow graph)  |
+                                     +-----------------+
+```
+
 ---
 
 ## Data Flow & Architecture Overview
