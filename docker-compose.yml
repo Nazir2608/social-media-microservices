@@ -72,3 +72,104 @@ services:
       memlock:
         soft: -1
         hard: -1
+
+  postgres:
+    image: postgres:16
+    container_name: social-media-postgres
+    environment:
+      POSTGRES_USER: social
+      POSTGRES_PASSWORD: Social@123
+      POSTGRES_DB: social_media
+    ports:
+      - "5433:5432"
+
+  user-service:
+    build: ./user-service
+    container_name: social-media-user-service
+    depends_on:
+      - mysql
+      - redis
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/social_media?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: MySql@123
+      SPRING_DATA_REDIS_HOST: redis
+    ports:
+      - "8081:8081"
+
+  post-service:
+    build: ./post-service
+    container_name: social-media-post-service
+    depends_on:
+      - mysql
+      - redis
+      - kafka
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/social_media?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: MySql@123
+      SPRING_DATA_REDIS_HOST: redis
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+    ports:
+      - "8082:8082"
+
+  graph-service:
+    build: ./graph-service
+    container_name: social-media-graph-service
+    depends_on:
+      - neo4j
+    environment:
+      SPRING_NEO4J_URI: bolt://neo4j:7687
+      SPRING_NEO4J_AUTHENTICATION_USERNAME: neo4j
+      SPRING_NEO4J_AUTHENTICATION_PASSWORD: password
+    ports:
+      - "8083:8083"
+
+  feed-service:
+    build: ./feed-service
+    container_name: social-media-feed-service
+    depends_on:
+      - kafka
+      - redis
+      - user-service
+      - post-service
+      - graph-service
+    environment:
+      SPRING_DATA_REDIS_HOST: redis
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      SERVICES_POST_BASE_URL: http://post-service:8082
+      SERVICES_USER_BASE_URL: http://user-service:8081
+      SERVICES_GRAPH_BASE_URL: http://graph-service:8083
+    ports:
+      - "8084:8084"
+
+  search-service:
+    build: ./search-service
+    container_name: social-media-search-service
+    depends_on:
+      - kafka
+      - elasticsearch
+    environment:
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      SPRING_ELASTICSEARCH_URIS: http://elasticsearch:9200
+    ports:
+      - "8085:8085"
+
+  api-gateway:
+    build: ./api-gateway
+    container_name: social-media-api-gateway
+    depends_on:
+      - user-service
+      - post-service
+      - graph-service
+      - feed-service
+      - search-service
+    environment:
+      SPRING_CLOUD_GATEWAY_ROUTES_0_URI: http://user-service:8081
+      SPRING_CLOUD_GATEWAY_ROUTES_1_URI: http://post-service:8082
+      SPRING_CLOUD_GATEWAY_ROUTES_2_URI: http://graph-service:8083
+      SPRING_CLOUD_GATEWAY_ROUTES_3_URI: http://feed-service:8084
+      SPRING_CLOUD_GATEWAY_ROUTES_4_URI: http://search-service:8085
+      SECURITY_JWT_SECRET: change-me-please-change-this-secret-key-32chars
+    ports:
+      - "8080:8080"
