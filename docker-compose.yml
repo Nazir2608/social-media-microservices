@@ -49,3 +49,12 @@ services:
     container_name: social-media-redis
     ports:
       - "6379:6379"
+
+  neo4j:
+    image: neo4j:5
+    container_name: social-media-neo4j
+    environment:
+      NEO4J_AUTH: neo4j/password
+    ports:
+      - "7474:7474"
+      - "7687:7687"
