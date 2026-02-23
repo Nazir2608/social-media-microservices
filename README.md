@@ -65,6 +65,7 @@ The architecture follows:
     - Parse and normalize hashtags.
     - Persist posts and hashtags.
     - Publish `PostCreatedEvent` to Kafka topic `post_created`.
+    - Store media either locally or in S3 based on configuration.
   - Data:
     - `posts` table.
     - `hashtags` and link tables for post–hashtag relations.
