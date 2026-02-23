@@ -29,6 +29,7 @@ public class JwtServiceImpl implements JwtService {
 
         return Jwts.builder()
                 .setSubject(String.valueOf(userId))
+                .claim("userId", userId)
                 .claim("username", username)
                 .setIssuedAt(now)
                 .setExpiration(expiry)
@@ -65,4 +66,3 @@ public class JwtServiceImpl implements JwtService {
                 .getBody();
     }
 }
-

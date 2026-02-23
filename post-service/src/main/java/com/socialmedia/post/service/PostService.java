@@ -110,7 +110,15 @@ public class PostService {
 
     @Transactional(readOnly = true)
     public PagedResponse<PostResponse> listPosts(int page, int size) {
-        Page<Post> pageResult = postRepository.findAll(PageRequest.of(page, size));
+        int safeSize = Math.min(Math.max(size, 1), 100);
+
+        long total = postRepository.count();
+        int totalPages = total == 0 ? 0 : (int) Math.ceil((double) total / safeSize);
+        int requestedPage = Math.max(page, 0);
+        int maxPage = totalPages == 0 ? 0 : totalPages - 1;
+        int safePage = Math.min(requestedPage, Math.max(maxPage, 0));
+
+        Page<Post> pageResult = postRepository.findAll(PageRequest.of(safePage, safeSize));
 
         List<Long> postIds = pageResult.getContent().stream()
                 .map(Post::getId)
@@ -126,7 +134,7 @@ public class PostService {
                 .collect(Collectors.toList());
 
         List<Hashtag> hashtags = hashtagRepository.findAllById(hashtagIds);
-        log.debug("Listing posts page={}, size={}, totalElements={}", page, size, pageResult.getTotalElements());
+        log.debug("Listing posts page={}, size={}, totalElements={}", safePage, safeSize, total);
         return new PagedResponse<>(
                 pageResult.getContent().stream()
                         .map(post -> {
@@ -151,10 +159,10 @@ public class PostService {
                             );
                         })
                         .collect(Collectors.toList()),
-                pageResult.getNumber(),
-                pageResult.getSize(),
-                pageResult.getTotalElements(),
-                pageResult.getTotalPages()
+                safePage,
+                safeSize,
+                total,
+                totalPages
         );
     }
 
