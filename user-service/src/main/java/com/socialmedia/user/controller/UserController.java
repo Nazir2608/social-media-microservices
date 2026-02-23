@@ -72,9 +72,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}/bio")
-    public ResponseEntity<ApiResponse<UserProfileResponse>> updateBio(
-            @PathVariable @Min(1) Long id,
-            @Valid @RequestBody UpdateBioRequest request) {
+    public ResponseEntity<ApiResponse<UserProfileResponse>> updateBio(@PathVariable @Min(1) Long id, @Valid @RequestBody UpdateBioRequest request) {
         log.info("Updating bio for userId={}", id);
         UserProfileResponse response = userService.updateBio(id, request);
         ApiResponse<UserProfileResponse> apiResponse = ApiResponse.<UserProfileResponse>builder()

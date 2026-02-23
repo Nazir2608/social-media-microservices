@@ -17,10 +17,7 @@ public class JwtServiceImpl implements JwtService {
     private final SecretKey key;
     private final long expirationMillis;
 
-    public JwtServiceImpl(
-            @Value("${security.jwt.secret}") String secret,
-            @Value("${security.jwt.expiration}") long expirationMillis
-    ) {
+    public JwtServiceImpl(@Value("${security.jwt.secret}") String secret, @Value("${security.jwt.expiration}") long expirationMillis) {
         this.key = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
         this.expirationMillis = expirationMillis;
     }

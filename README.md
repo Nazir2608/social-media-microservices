@@ -1,4 +1,4 @@
-# 🚀 Social Media Backend – Microservices Architecture
+#  Social Media Backend – Microservices Architecture
 
 This project is a scalable, event-driven social media backend system inspired by Instagram.
 

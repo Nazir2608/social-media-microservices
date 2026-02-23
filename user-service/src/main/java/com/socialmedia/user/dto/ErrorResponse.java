@@ -9,13 +9,9 @@ import lombok.Getter;
 @Builder
 @AllArgsConstructor
 public class ErrorResponse {
-
     private LocalDateTime timestamp;
-
     private int status;
-
     private String error;
-
     private String path;
 }
 

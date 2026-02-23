@@ -9,13 +9,9 @@ import lombok.Getter;
 @Builder
 @AllArgsConstructor
 public class ApiResponse<T> {
-
     private boolean success;
-
     private T data;
-
     private String message;
-
     private LocalDateTime timestamp;
 }
 

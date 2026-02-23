@@ -48,8 +48,7 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public LoginResponse login(LoginRequest request) {
-        User user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> {
+        User user = userRepository.findByEmail(request.getEmail()).orElseThrow(() -> {
                     log.warn("Login failed: email {} not found", request.getEmail());
                     return new IllegalArgumentException("Invalid credentials");
                 });
@@ -66,8 +65,7 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public UserProfileResponse getProfile(Long id) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> {
+        User user = userRepository.findById(id).orElseThrow(() -> {
                     log.warn("Profile fetch failed: userId {} not found", id);
                     return new IllegalArgumentException("User not found");
                 });
@@ -84,8 +82,7 @@ public class UserService {
 
     @Transactional
     public UserProfileResponse updateBio(Long id, UpdateBioRequest request) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> {
+        User user = userRepository.findById(id).orElseThrow(() -> {
                     log.warn("Update bio failed: userId {} not found", id);
                     return new IllegalArgumentException("User not found");
                 });
