@@ -131,6 +131,15 @@ The architecture follows:
 
 ---
 
+## Observability
+
+- **Spring Boot Actuator**
+  - Enabled in api-gateway, post-service, graph-service, feed-service, search-service and user-service.
+  - Provides health, info and basic metrics endpoints under `/actuator/**`.
+  - Can be scraped by external monitoring tools (Prometheus, Grafana, etc.) if needed.
+
+---
+
 ## Data Flow & Architecture Overview
 
 ### 1. Authentication and Gateway
