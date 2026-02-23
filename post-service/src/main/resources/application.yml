@@ -32,3 +32,10 @@ kafka:
 
 media:
   upload-dir: uploads/posts
+  storage:
+    type: local # options: local or s3
+  s3:
+    bucket: change-me-bucket
+    region: ap-south-1
+    base-url: https://change-me-bucket.s3.ap-south-1.amazonaws.com
+    folder: posts

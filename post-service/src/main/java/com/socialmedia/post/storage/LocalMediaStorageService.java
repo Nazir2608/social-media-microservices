@@ -8,10 +8,12 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @Service
+@ConditionalOnProperty(prefix = "media.storage", name = "type", havingValue = "local", matchIfMissing = true)
 @Slf4j
 public class LocalMediaStorageService implements MediaStorageService {
 
