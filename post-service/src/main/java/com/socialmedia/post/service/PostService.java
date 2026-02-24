@@ -9,6 +9,7 @@ import com.socialmedia.post.entity.PostHashtag;
 import com.socialmedia.post.entity.PostHashtagLink;
 import com.socialmedia.post.kafka.PostCreatedEvent;
 import com.socialmedia.post.kafka.PostEventPublisher;
+import com.socialmedia.post.rate.RateLimiterService;
 import com.socialmedia.post.repository.HashtagRepository;
 import com.socialmedia.post.repository.PostHashtagLinkRepository;
 import com.socialmedia.post.repository.PostRepository;
@@ -42,6 +43,7 @@ public class PostService {
     private final PostHashtagLinkRepository postHashtagLinkRepository;
     private final MediaStorageService mediaStorageService;
     private final PostEventPublisher postEventPublisher;
+    private final RateLimiterService rateLimiterService;
 
     @Value("${media.max-size-mb:10}")
     private long maxFileSizeMb;
@@ -54,6 +56,11 @@ public class PostService {
         if (file == null || file.isEmpty()) {
             log.warn("Create post failed: missing file for userId={}", userId);
             throw new IllegalArgumentException("File is required");
+        }
+        boolean allowed = rateLimiterService.tryConsume(String.valueOf(userId));
+        if (!allowed) {
+            log.warn("Rate limit exceeded for userId={}", userId);
+            throw new IllegalArgumentException("Rate limit exceeded for creating posts");
         }
         long maxBytes = maxFileSizeMb * 1024 * 1024;
         if (file.getSize() > maxBytes) {

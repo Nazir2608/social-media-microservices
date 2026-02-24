@@ -30,6 +30,11 @@ kafka:
   topics:
     post-created: post_created
 
+rate-limit:
+  create-post:
+    limit: 10
+    window-seconds: 60
+
 media:
   upload-dir: uploads/posts
   storage:

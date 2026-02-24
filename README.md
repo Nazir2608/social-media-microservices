@@ -66,7 +66,7 @@ The architecture follows:
     - Persist posts and hashtags.
      - Publish `PostCreatedEvent` to Kafka topic `post_created`.
      - Store media either locally or in S3 based on configuration.
-     - Enforce file size and content type validation for uploads.
+     - Enforce file size, content type validation and per-user rate limiting for uploads.
   - Data:
     - `posts` table.
     - `hashtags` and link tables for post–hashtag relations.
