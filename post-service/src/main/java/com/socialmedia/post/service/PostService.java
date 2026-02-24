@@ -17,12 +17,15 @@ import java.io.IOException;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -40,11 +43,29 @@ public class PostService {
     private final MediaStorageService mediaStorageService;
     private final PostEventPublisher postEventPublisher;
 
+    @Value("${media.max-size-mb:10}")
+    private long maxFileSizeMb;
+
+    @Value("${media.allowed-content-types:image/jpeg,image/png,image/jpg}")
+    private String allowedContentTypesProperty;
+
     @Transactional
     public CreatePostResponse createPost(Long userId, String caption, String hashtagsCsv, MultipartFile file) {
         if (file == null || file.isEmpty()) {
             log.warn("Create post failed: missing file for userId={}", userId);
             throw new IllegalArgumentException("File is required");
+        }
+        long maxBytes = maxFileSizeMb * 1024 * 1024;
+        if (file.getSize() > maxBytes) {
+            log.warn("Create post failed: file too large size={} bytes, limit={} MB for userId={}",
+                    file.getSize(), maxFileSizeMb, userId);
+            throw new IllegalArgumentException("File size exceeds allowed limit of " + maxFileSizeMb + " MB");
+        }
+        String contentType = file.getContentType();
+        Set<String> allowedContentTypes = new HashSet<>(Arrays.asList(allowedContentTypesProperty.split(",")));
+        if (contentType == null || !allowedContentTypes.contains(contentType)) {
+            log.warn("Create post failed: unsupported content type={} for userId={}", contentType, userId);
+            throw new IllegalArgumentException("Unsupported content type");
         }
         log.debug("Storing media for userId={}, originalFilename={}", userId, file.getOriginalFilename());
         String filename = System.currentTimeMillis() + "_" + file.getOriginalFilename();
