@@ -39,3 +39,5 @@ media:
     region: ap-south-1
     base-url: https://change-me-bucket.s3.ap-south-1.amazonaws.com
     folder: posts
+  max-size-mb: 10
+  allowed-content-types: image/jpeg,image/png,image/jpg
